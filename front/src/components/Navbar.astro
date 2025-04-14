@@ -1,0 +1,17 @@
+---
+const navItems = [
+  { name: 'Accueil', href: '/' },
+  { name: 'Calendrier', href: '/calendrier' },
+  { name: 'Formulaire', href: '/formulaire' },
+  { name: 'Ressources', href: '/ressources' },
+  { name: 'Portfolio', href: '/portfolio' }
+];
+---
+
+<nav class="bg-gray-100 p-4 shadow">
+  <ul class="flex gap-4">
+    {navItems.map(item => (
+      <li><a class="hover:underline" href={item.href}>{item.name}</a></li>
+    ))}
+  </ul>
+</nav>

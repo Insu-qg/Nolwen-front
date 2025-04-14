@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import './src/styles/global.css'
+
+// Tu pourras remplacer ça par un fetch à Strapi
+const projets = [
+  { id: 1, title: 'Site web pour un restaurant' },
+  { id: 2, title: 'Identité visuelle pour une artiste' },
+];
+---
+
+<Layout>
+  <h1 class="text-2xl font-semibold mb-4">Portfolio</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {projets.map(p => (
+      <div class="border p-4 shadow hover:shadow-lg transition">
+        <h2 class="text-lg font-bold">{p.title}</h2>
+      </div>
+    ))}
+  </div>
+</Layout>
