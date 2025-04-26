@@ -1,5 +1,6 @@
 ---
 import Navbar from "../components/Navbar.astro";
+import "../styles/global.css"; 
 ---
 
 <html lang="fr">
@@ -27,9 +28,9 @@ import Navbar from "../components/Navbar.astro";
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
   </head>
-  <body class="bg-white text-gray-900">
+  <body class="light-theme font-sans min-h-screen">
     <Navbar />
-    <main class="p-6 max-w-4xl mx-auto">
+    <main class="p-6 mx-auto shadow-lg">
       <slot />
     </main>
   </body>

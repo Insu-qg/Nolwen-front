@@ -1,4 +1,8 @@
-@import "tailwindcss";
+/* global.css */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 /* Outfit Thin */
 @font-face {
     font-family: 'Outfit';
@@ -74,4 +78,5 @@
   /* Appliquer la font partout */
   body {
     font-family: 'Outfit', sans-serif;
+    background-color: #ffffff;
   }

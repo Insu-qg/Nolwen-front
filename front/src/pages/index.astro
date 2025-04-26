@@ -1,12 +1,166 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import "./src/styles/global.css";
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-  <h1 class="text-3xl font-bold mb-4">Bienvenue sur le site</h1>
-  <p class="font-bold">Ceci est la page d'accueil.</p>
+  <div class="max-w-6xl mx-auto px-4 py-24">
+    <h1 class="text-5xl font-bold text-center mb-16 text-gray-800">
+      Lorem Ipsum Dolor
+    </h1>
+
+    <!-- ------- Forme 1 ------- -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- ------- Bloc 1 ------- -->
+      <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div class="flex justify-center mb-6">
+          <div class="bg-white p-4 rounded-full shadow-sm">
+            <div class="bg-beige p-3 rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-black"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <!-- Titre -->
+        <h2 class="text-2xl font-semibold text-center mb-2">
+          Consectetur Elit
+        </h2>
+        <div class="flex justify-center mb-4">
+          <div class="bg-beige h-1 w-32 rounded"></div>
+        </div>
+        <!-- Texte -->
+        <p class="text-gray-700 text-center font-light">
+          Nullam quis risus eget urna mollis ornare vel eu leo. Donec sed odio
+          dui. Maecenas faucibus mollis interdum.
+        </p>
+      </div>
+      <!-- ------- Bloc 2 ------- -->
+      <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div class="flex justify-center mb-6">
+          <div class="flex gap-2">
+            <div class="bg-gray-800 w-8 h-8 rounded shadow-sm"></div>
+            <div class="bg-primary w-8 h-8 rounded shadow-sm"></div>
+            <div class="bg-beige w-8 h-8 rounded shadow-sm"></div>
+          </div>
+        </div>
+        <!-- Titre -->
+        <h2 class="text-2xl font-semibold text-center mb-2">Sed Magna</h2>
+        <div class="flex justify-center mb-4">
+          <div class="bg-beige h-1 w-32 rounded"></div>
+        </div>
+        <!-- Texte -->
+        <p class="text-gray-700 text-center font-light">
+          Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam.
+          Pellentesque ornare sem lacinia.
+        </p>
+      </div>
+      <!-- ------- Bloc 3 ------- -->
+      <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div class="flex justify-center mb-6">
+          <div class="bg-beige px-8 py-3 rounded-lg relative shadow-sm">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-black"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"></path>
+            </svg>
+            <div class="absolute -right-1 -top-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-black"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <!-- Titre -->
+        <h2 class="text-2xl font-semibold text-center mb-2">Fusce Dapibus</h2>
+        <div class="flex justify-center mb-4">
+          <div class="bg-beige h-1 w-32 rounded"></div>
+        </div>
+        <!-- Texte -->
+        <p class="text-gray-700 text-center font-light">
+          Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque
+          penatibus et magnis dis parturient montes.
+        </p>
+      </div>
+    </div>
+
+    <!-- ------- Forme 2 ------- -->
+    <div class="mt-16 mb-16 bg-white p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+      <!-- Titre -->
+      <h2 class="text-3xl font-bold text-center mb-2">Lorem Ipsum</h2>
+      <div class="flex justify-center mb-6">
+        <div class="bg-beige h-1 w-32 rounded"></div>
+      </div>
+      <!-- Texte -->
+      <p class="text-gray-700 text-center max-w-2xl mx-auto font-light">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+    </div>
+
+    <!-- ------- Forme 3 ------- -->
+    <div class="bg-gray-50 p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+      <!-- Titre -->
+      <h2 class="text-3xl font-semibold text-center mb-2">Sed Magna</h2>
+      <div class="flex justify-center mb-6">
+        <div class="bg-beige h-1 w-32 rounded"></div>
+      </div>
+      <!-- Texte -->
+      <p class="text-gray-700 text-center max-w-2xl mx-auto mb-6 font-light">
+        Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam.
+        Pellentesque ornare sem lacinia.
+      </p>
+
+      <!-- ------- Bloc 1 ------- -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+          <!-- Titre 1 -->
+          <h3 class="font-semibold mb-2 text-center">Pellentesque</h3>
+          <!-- Texte 1 -->
+          <p class="text-sm text-gray-600 text-center font-light">Etiam porta sem malesuada magna mollis euismod.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+          <!-- Titre 2 -->
+          <h3 class="font-semibold mb-2 text-center">Inceptos</h3>
+          <!-- Texte 2 -->
+          <p class="text-sm text-gray-600 text-center font-light">Cras mattis consectetur purus sit amet fermentum.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+          <!-- Titre 3 -->
+          <h3 class="font-semibold mb-2 text-center">Vehicula</h3>
+          <!-- Texte  3-->
+          <p class="text-sm text-gray-600 text-center font-light">Vestibulum id ligula porta felis euismod semper.</p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
 </Layout>
