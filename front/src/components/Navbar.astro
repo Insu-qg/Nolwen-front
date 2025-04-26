@@ -1,17 +1,22 @@
 ---
 const navItems = [
-  { name: 'Accueil', href: '/' },
-  { name: 'Calendrier', href: '/calendrier' },
-  { name: 'Formulaire', href: '/formulaire' },
-  { name: 'Ressources', href: '/ressources' },
-  { name: 'Portfolio', href: '/portfolio' }
+  { name: 'Accueil', href: '/', icon: 'home' },
+  { name: 'Calendrier', href: '/calendrier', icon: 'calendar-alt' },
+  { name: 'Formulaire', href: '/formulaire', icon: 'file-alt' },
+  { name: 'Ressources', href: '/ressources', icon: 'book' },
+  { name: 'Portfolio', href: '/portfolio', icon: 'images' }
 ];
 ---
 
-<nav class="bg-gray-100 p-4 shadow">
-  <ul class="flex gap-4">
+<nav class="bg-white shadow-md p-4 font-sans">
+  <ul class="flex items-center gap-6">
     {navItems.map(item => (
-      <li><a class="hover:underline" href={item.href}>{item.name}</a></li>
+      <li class="flex items-center gap-3">
+        <a href={item.href} class="flex items-center gap-3 hover:text-blue-500">
+          <i class={`fas fa-${item.icon} text-lg align-middle`}></i>
+          <span class="text-lg font-semibold">{item.name}</span>
+        </a>
+      </li>
     ))}
   </ul>
 </nav>
