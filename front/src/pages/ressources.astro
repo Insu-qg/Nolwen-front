@@ -1,22 +1,66 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import './src/styles/global.css'
 
-// Exemple fictif de data venant de Strapi
-const ressources = [
-  { id: 1, title: 'Formation React', type: 'Formation' },
-  { id: 2, title: 'Conseils en branding', type: 'Conseil' },
-];
+// Récupération des données depuis Strapi
+const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/resources?populate=*`);
+const { data } = await response.json();
+
+
+
+type ResourceItem = {
+  id: number;
+  title: string;
+  description: string;
+  image: { url: string };
+  pdf: { url: string };
+  order: number;
+};
+
+const ressources = data.map((item: ResourceItem) => ({
+  id: item.id,
+  title: item.title,
+  description: item.description,
+  image: `${import.meta.env.PUBLIC_STRAPI_URL}${item.image.url}`,
+  pdf: `${import.meta.env.PUBLIC_STRAPI_URL}${item.pdf.url}`,
+  order: item.order,
+}));
 ---
 
 <Layout>
-  <h1 class="text-2xl font-semibold mb-4">Ressources</h1>
-  <ul class="space-y-2">
-    {ressources.map(r => (
-      <li class="border p-4">
-        <h2 class="font-bold">{r.title}</h2>
-        <p class="text-sm text-gray-600">{r.type}</p>
-      </li>
-    ))}
-  </ul>
+  <div class="max-w-6xl mx-auto px-4 py-24">
+    <h1 class="text-3xl font-bold text-center mb-2">Nos Ressources</h1>
+    <div class="flex justify-center mb-6">
+      <div class="bg-beige h-1 w-32 rounded"></div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+      {ressources.map((ressource: {
+        id: number;
+        title: string;
+        description: string;
+        image: string;
+        pdf: string;
+        order: number;
+      }) => (
+        <div class="bg-white rounded-lg overflow-hidden border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_20px_-5px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+          <img 
+            src={ressource.image} 
+            alt={ressource.title}
+            class="w-full h-48 object-cover"
+          />
+          <div class="p-6">
+            <h2 class="text-xl font-bold mb-3">{ressource.title}</h2>
+            <p class="text-gray-600">{ressource.description}</p>
+            <a 
+              href={ressource.pdf}
+              download
+              class="inline-block mt-4 px-6 py-2 bg-beige text-black rounded-lg hover:bg-opacity-90 transition-colors duration-300"
+            >
+              En savoir plus
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
 </Layout>

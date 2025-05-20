@@ -1,14 +1,128 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import "./src/styles/global.css";
 ---
 
 <Layout>
-  <h1 class="text-2xl font-semibold mb-4">Formulaire de contact</h1>
-  <form class="space-y-4">
-    <input type="text" placeholder="Nom" class="border p-2 w-full" />
-    <input type="email" placeholder="Email" class="border p-2 w-full" />
-    <textarea placeholder="Message" class="border p-2 w-full"></textarea>
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2">Envoyer</button>
-  </form>
+  <div class="max-w-2xl mx-auto px-4 py-24">
+    <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+      <!-- Titre -->
+      <h1 class="text-3xl font-bold text-center mb-2">Contactez-nous</h1>
+      <div class="flex justify-center mb-6">
+        <div class="bg-beige h-1 w-32 rounded"></div>
+      </div>
+      <!-- Formulaire -->
+      <form class="space-y-6" id="contactForm">
+        <div class="space-y-2">
+          <label for="nom" class="block text-sm font-medium text-gray-700">Nom complet</label>
+          <input
+            type="text"
+            id="nom"
+            name="nom"
+            required
+            class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-beige focus:border-transparent transition"
+            placeholder="Votre nom"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-medium text-gray-700">Adresse email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-beige focus:border-transparent transition"
+            placeholder="votre@email.com"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="sujet" class="block text-sm font-medium text-gray-700">Sujet</label>
+          <input
+            type="text"
+            id="sujet"
+            name="sujet"
+            required
+            class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-beige focus:border-transparent transition"
+            placeholder="Sujet de votre message"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-beige focus:border-transparent transition"
+            placeholder="Votre message"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-center">
+          <button
+            type="submit"
+            class="bg-beige text-black px-8 py-3 rounded-lg hover:bg-opacity-90 transition-colors duration-300 font-medium"
+          >
+            Envoyer le formulaire
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('contactForm') as HTMLFormElement;
+    if (!form) {
+      console.error('Le formulaire n\'a pas été trouvé');
+      throw new Error('Le formulaire n\'a pas été trouvé');
+    }
+
+    // Variable pour stocker le timestamp de la dernière soumission
+    let lastSubmissionTime = 0;
+    const SUBMISSION_DELAY = 60000; // 60 secondes de délai
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Vérifier le délai depuis la dernière soumission
+      const now = Date.now();
+      if (now - lastSubmissionTime < SUBMISSION_DELAY) {
+        alert('Veuillez attendre une minute entre chaque envoi.');
+        return;
+      }
+      
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+
+      try {
+        const response = await fetch('${import.meta.env.PUBLIC_STRAPI_URL}/api/contacts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            data: {
+              nom: data.nom,
+              email: data.email,
+              sujet: data.sujet,
+              message: data.message
+            }
+          }),
+        });
+
+        if (response.ok) {
+          lastSubmissionTime = now; // Enregistrer le timestamp de la soumission
+          alert('Formulaire envoyé avec succès!');
+          form.reset();
+        } else {
+          alert('Une erreur est survenue lors de l\'envoi du formulaire.');
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue lors de l\'envoi du formulaire.');
+      }
+    });
+  </script>
 </Layout>
