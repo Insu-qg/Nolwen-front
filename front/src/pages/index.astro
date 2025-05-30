@@ -1,11 +1,37 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+// Interface pour les données Strapi
+interface StrapiTitle {
+  title: string;
+  type: number;
+}
+
+// Valeur par défaut pour le titre de la page
+let pageTitle = "Lorem Ipsum Dolor";
+
+try {
+  const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
+  
+  if (response.ok) {
+    const { data } = await response.json();
+    // Chercher le titre avec type = 1 (Accueil)
+    const homeTitle = data?.find((item: StrapiTitle) => item.type === 1);
+    if (homeTitle) {
+      pageTitle = homeTitle.alt;
+    }
+  } else {
+    console.error('Erreur lors de la récupération du titre');
+  }
+} catch (error) {
+  console.error('Erreur:', error);
+}
 ---
 
 <Layout>
   <div class="max-w-6xl mx-auto px-4 py-24">
     <h1 class="text-5xl font-bold text-center mb-16 text-gray-800">
-      Lorem Ipsum Dolor
+      {pageTitle}
     </h1>
 
     <!-- ------- Forme 1 ------- -->

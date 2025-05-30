@@ -1,28 +1,67 @@
 ---
-const navItems = [
-  { name: 'Accueil', href: '/', icon: 'home' },
-  { name: 'Calendrier', href: '/calendrier', icon: 'calendar-alt' },
-  { name: 'Formulaire', href: '/formulaire', icon: 'file-alt' },
-  { name: 'Ressources', href: '/ressources', icon: 'book' },
-  { name: 'Portfolio', href: '/portfolio', icon: 'images' },
-  { name: 'Test', href: '/page-1', icon: 'images' }
+// Récupération des données depuis Strapi
+const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
+const { data } = await response.json();
+
+// Interface pour les données Strapi
+interface StrapiTitle {
+  title: string;
+  type: number;
+}
+
+// Interface pour les données Strapi
+interface MenuItem {
+  name: string;
+  href: string;
+  icon: string;
+  order: number;
+}
+
+const iconMapping = ["home", "book", "images", "file-alt", "calendar-alt"];
+
+// Mapping des URLs pour chaque type
+const urlMapping = [
+  "/",
+  "/formations",
+  "/portfolio",
+  "/contacts",
+  "/calendrier",
 ];
+
+const navItems = data?.map((item: StrapiTitle) => ({
+  name: item.title,
+  href: urlMapping[item.type - 1],
+  icon: iconMapping[item.type - 1],
+  order: item.type
+})) .sort((a: MenuItem, b: MenuItem) => a.order - b.order);
+
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-darkgray text-white p-4 font-sans shadow-md">
+<nav
+  class="fixed top-0 left-0 right-0 z-50 bg-darkgray text-white p-4 font-sans shadow-md"
+>
   <div class="flex items-center">
     <div class="mr-8">
-      <img src="/images/230112_Livraison_NolwenCeccon_logo.svg" alt="Logo" class="h-8 w-8 brightness-0 invert"  />
+      <img
+        src="/images/230112_Livraison_NolwenCeccon_logo.svg"
+        alt="Logo"
+        class="h-8 w-8 brightness-0 invert"
+      />
     </div>
     <ul class="flex items-center gap-6 flex-grow justify-center">
-      {navItems.map(item => (
-        <li class="flex items-center gap-3">
-          <a href={item.href} class="flex items-center gap-3 hover:text-secondary">
-            <i class={`fas fa-${item.icon} text-lg align-middle`}></i>
-            <span class="text-lg font-semibold">{item.name}</span>
-          </a>
-        </li>
-      ))}
+      {
+        navItems?.map((item: MenuItem) => (
+          <li class="flex items-center gap-3">
+            <a
+              href={item.href}
+              class="flex items-center gap-3 hover:text-secondary"
+            >
+              <i class={`fas fa-${item.icon} text-lg align-middle`} />
+              <span class="text-lg font-semibold">{item.name}</span>
+            </a>
+          </li>
+        ))
+      }
     </ul>
   </div>
 </nav>

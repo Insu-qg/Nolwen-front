@@ -1,7 +1,31 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// Récupération des données depuis Strapi
+// Interface pour les données Strapi
+interface StrapiTitle {
+  title: string;
+  type: number;
+}
+
+// Valeur par défaut pour le titre de la page
+let pageTitle = "Nos formations";
+
+try {
+  // Récupération du titre depuis Strapi
+  const titleResponse = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
+  if (titleResponse.ok) {
+    const { data } = await titleResponse.json();
+    // Chercher le titre avec type = 2 (Formations)
+    const formationTitle = data?.find((item: StrapiTitle) => item.type === 2);
+    if (formationTitle) {
+      pageTitle = formationTitle.alt;
+    }
+  }
+} catch (error) {
+  console.error('Erreur lors de la récupération du titre:', error);
+}
+
+// Récupération des ressources depuis Strapi
 const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/resources?populate=*`);
 const { data } = await response.json();
 
@@ -30,7 +54,7 @@ const ressources = data
 
 <Layout>
   <div class="max-w-6xl mx-auto px-4 py-24">
-    <h1 class="text-3xl font-bold text-center mb-2">Nos Ressources</h1>
+    <h1 class="text-3xl font-bold text-center mb-2">{pageTitle}</h1>
     <div class="flex justify-center mb-6">
       <div class="bg-beige h-1 w-32 rounded"></div>
     </div>
