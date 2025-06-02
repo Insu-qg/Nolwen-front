@@ -7,139 +7,128 @@ interface StrapiTitle {
   type: number;
 }
 
+interface ResourceItem {
+  id: number;
+  title: string;
+  description: string;
+  image: { url: string };
+  pdf: { url: string };
+  order: number;
+}
+
 // Valeur par défaut pour le titre de la page
 let pageTitle = "Lorem Ipsum Dolor";
+let formations: ResourceItem[] = [];
+let formationsSectionTitle = "Nos formations";
 
 try {
+  // Récupération du titre principal
   const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
-  
+
   if (response.ok) {
     const { data } = await response.json();
-    // Chercher le titre avec type = 1 (Accueil)
     const homeTitle = data?.find((item: StrapiTitle) => item.type === 1);
     if (homeTitle) {
-      pageTitle = homeTitle.alt;
+      pageTitle = homeTitle.title;
     }
-  } else {
-    console.error('Erreur lors de la récupération du titre');
+  }
+
+  // Récupération du titre de la section formations
+  const cardTitleResponse = await fetch(
+    `${import.meta.env.PUBLIC_STRAPI_URL}/api/card-titles?pagination[limit]=1`
+  );
+  if (cardTitleResponse.ok) {
+    const { data } = await cardTitleResponse.json();
+    if (data?.[0]?.title) {
+      formationsSectionTitle = data[0].title;
+    }
+  }
+
+  // Récupération des formations
+  const formationsResponse = await fetch(
+    `${import.meta.env.PUBLIC_STRAPI_URL}/api/cards?populate=*`
+  );
+  if (formationsResponse.ok) {
+    const { data } = await formationsResponse.json();
+    formations = data
+      .map((item: ResourceItem) => ({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        image: `${import.meta.env.PUBLIC_STRAPI_URL}${item.image.url}`,
+        pdf: `${import.meta.env.PUBLIC_STRAPI_URL}${item.pdf.url}`,
+        order: item.order,
+      }))
+      .sort((a: ResourceItem, b: ResourceItem) => a.order - b.order)
+      .slice(0, 3); // Limite à 3 formations
   }
 } catch (error) {
-  console.error('Erreur:', error);
+  console.error("Erreur:", error);
 }
 ---
 
 <Layout>
   <div class="max-w-6xl mx-auto px-4 py-24">
-    <h1 class="text-5xl font-bold text-center mb-16 text-gray-800">
+    <h1 class="text-4xl font-bold text-center mb-2">
       {pageTitle}
     </h1>
+    <div class="flex justify-center mb-16">
+      <div class="bg-beige h-1 w-32 rounded"></div>
+    </div>
 
-    <!-- ------- Forme 1 ------- -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- ------- Bloc 1 ------- -->
-      <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div class="flex justify-center mb-6">
-          <div class="bg-white p-4 rounded-full shadow-sm">
-            <div class="bg-beige p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-black"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-        <!-- Titre -->
-        <h2 class="text-2xl font-semibold text-center mb-2">
-          Consectetur Elit
-        </h2>
-        <div class="flex justify-center mb-4">
-          <div class="bg-beige h-1 w-32 rounded"></div>
-        </div>
-        <!-- Texte -->
-        <p class="text-gray-700 text-center font-light">
-          Nullam quis risus eget urna mollis ornare vel eu leo. Donec sed odio
-          dui. Maecenas faucibus mollis interdum.
-        </p>
+    <!-- Section Formations -->
+    <div class="mb-16">
+      <h2 class="text-3xl font-bold text-center mb-2">
+        {formationsSectionTitle}
+      </h2>
+      <div class="flex justify-center mb-6">
+        <div class="bg-beige h-1 w-32 rounded"></div>
       </div>
-      <!-- ------- Bloc 2 ------- -->
-      <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div class="flex justify-center mb-6">
-          <div class="flex gap-2">
-            <div class="bg-gray-800 w-8 h-8 rounded shadow-sm"></div>
-            <div class="bg-primary w-8 h-8 rounded shadow-sm"></div>
-            <div class="bg-beige w-8 h-8 rounded shadow-sm"></div>
-          </div>
-        </div>
-        <!-- Titre -->
-        <h2 class="text-2xl font-semibold text-center mb-2">Sed Magna</h2>
-        <div class="flex justify-center mb-4">
-          <div class="bg-beige h-1 w-32 rounded"></div>
-        </div>
-        <!-- Texte -->
-        <p class="text-gray-700 text-center font-light">
-          Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam.
-          Pellentesque ornare sem lacinia.
-        </p>
-      </div>
-      <!-- ------- Bloc 3 ------- -->
-      <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div class="flex justify-center mb-6">
-          <div class="bg-beige px-8 py-3 rounded-lg relative shadow-sm">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-black"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"></path>
-            </svg>
-            <div class="absolute -right-1 -top-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-black"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                ></path>
-              </svg>
+
+      <div
+        class={`grid grid-cols-1 gap-8 mt-12 ${
+          formations.length === 1
+            ? "md:grid-cols-1 max-w-xl mx-auto"
+            : formations.length === 2
+              ? "md:grid-cols-2 max-w-3xl mx-auto"
+              : "md:grid-cols-2 lg:grid-cols-3"
+        }`}
+      >
+        {
+          formations.map((formation) => (
+            <div class="bg-white rounded-lg overflow-hidden border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_20px_-5px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+              <img
+                src={formation.image}
+                alt={formation.title}
+                class="w-full h-48 object-cover"
+              />
+              <div class="p-6">
+                <h3 class="text-xl text-center font-bold mb-3">
+                  {formation.title}
+                </h3>
+                <div class="flex justify-center mb-6">
+                  <div class="bg-beige h-1 w-32 rounded" />
+                </div>
+                <p class="text-gray-600">{formation.description}</p>
+                <a
+                  href={formation.pdf}
+                  target="_blank"
+                  download
+                  class="inline-block mt-4 px-6 py-2 bg-beige text-black rounded-lg hover:bg-opacity-90 transition-colors duration-300"
+                >
+                  En savoir plus
+                </a>
+              </div>
             </div>
-          </div>
-        </div>
-        <!-- Titre -->
-        <h2 class="text-2xl font-semibold text-center mb-2">Fusce Dapibus</h2>
-        <div class="flex justify-center mb-4">
-          <div class="bg-beige h-1 w-32 rounded"></div>
-        </div>
-        <!-- Texte -->
-        <p class="text-gray-700 text-center font-light">
-          Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque
-          penatibus et magnis dis parturient montes.
-        </p>
+          ))
+        }
       </div>
     </div>
 
     <!-- ------- Forme 2 ------- -->
-    <div class="mt-16 mb-16 bg-white p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div
+      class="mt-16 mb-16 bg-white p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+    >
       <!-- Titre -->
       <h2 class="text-3xl font-bold text-center mb-2">Lorem Ipsum</h2>
       <div class="flex justify-center mb-6">
@@ -151,94 +140,5 @@ try {
         tempor incididunt ut labore et dolore magna aliqua.
       </p>
     </div>
-
-    <!-- ------- Forme 3 ------- -->
-    <div class="bg-gray-50 p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-      <!-- Titre -->
-      <h2 class="text-3xl font-semibold text-center mb-2">Sed Magna</h2>
-      <div class="flex justify-center mb-6">
-        <div class="bg-beige h-1 w-32 rounded"></div>
-      </div>
-      <!-- Texte -->
-      <p class="text-gray-700 text-center max-w-2xl mx-auto mb-6 font-light">
-        Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam.
-        Pellentesque ornare sem lacinia.
-      </p>
-
-      <!-- ------- Bloc 1 ------- -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <div class="bg-white p-6 rounded-lg shadow-sm">
-          <!-- Titre 1 -->
-          <h3 class="font-semibold mb-2 text-center">Pellentesque</h3>
-          <!-- Texte 1 -->
-          <p class="text-sm text-gray-600 text-center font-light">Etiam porta sem malesuada magna mollis euismod.</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-sm">
-          <!-- Titre 2 -->
-          <h3 class="font-semibold mb-2 text-center">Inceptos</h3>
-          <!-- Texte 2 -->
-          <p class="text-sm text-gray-600 text-center font-light">Cras mattis consectetur purus sit amet fermentum.</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-sm">
-          <!-- Titre 3 -->
-          <h3 class="font-semibold mb-2 text-center">Vehicula</h3>
-          <!-- Texte  3-->
-          <p class="text-sm text-gray-600 text-center font-light">Vestibulum id ligula porta felis euismod semper.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ------- Forme 4 - Image à droite ------- -->
-    <div class="mt-16 bg-gray-50 p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        <div>
-          <!-- Titre -->
-          <h2 class="text-3xl font-semibold mb-2">Vestibulum Magna</h2>
-          <div class="mb-6">
-            <div class="bg-beige h-1 w-32 rounded"></div>
-          </div>
-          <!-- Texte -->
-          <p class="text-gray-700 font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
-        </div>
-        <div class="flex justify-center">
-          <img 
-            src="/images/placeholder.jpg" 
-            alt="Description" 
-            class="rounded-lg shadow-md object-cover h-64 w-full"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- ------- Forme 5 - Image à gauche ------- -->
-    <div class="mt-16 mb-16 bg-gray-50 p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        <div class="flex justify-center">
-          <img 
-            src="/images/placeholder.jpg" 
-            alt="Description" 
-            class="rounded-lg shadow-md object-cover h-64 w-full"
-          />
-        </div>
-        <div>
-          <!-- Titre -->
-          <h2 class="text-3xl font-semibold mb-2">Fringilla Ipsum</h2>
-          <div class="mb-6">
-            <div class="bg-beige h-1 w-32 rounded"></div>
-          </div>
-          <!-- Texte -->
-          <p class="text-gray-700 font-light">
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio
-            sem nec elit. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus
-            mollis interdum.
-          </p>
-        </div>
-      </div>
-    </div>
-    
   </div>
 </Layout>
