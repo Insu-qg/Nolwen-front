@@ -7,6 +7,12 @@ interface StrapiTitle {
   type: number;
 }
 
+interface TextBlock {
+  title: string;
+  content: string;
+  order: number;
+}
+
 interface ResourceItem {
   id: number;
   title: string;
@@ -20,10 +26,13 @@ interface ResourceItem {
 let pageTitle = "Lorem Ipsum Dolor";
 let formations: ResourceItem[] = [];
 let formationsSectionTitle = "Nos formations";
+let textBlocks: TextBlock[] = [];
 
 try {
   // Récupération du titre principal
-  const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
+  const response = await fetch(
+    `${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`
+  );
 
   if (response.ok) {
     const { data } = await response.json();
@@ -61,6 +70,19 @@ try {
       }))
       .sort((a: ResourceItem, b: ResourceItem) => a.order - b.order)
       .slice(0, 3); // Limite à 3 formations
+  }
+
+  // Récupération des items "Forme 2"
+  const shape2Response = await fetch(
+    `${import.meta.env.PUBLIC_STRAPI_URL}/api/text-blocks`
+  );
+  if (shape2Response.ok) {
+    const { data } = await shape2Response.json();
+    textBlocks = data.map((item: any) => ({
+      title: item.title,
+      content: item.content,
+      order: item.order,
+    })).sort((a: TextBlock, b: TextBlock) => a.order - b.order);
   }
 } catch (error) {
   console.error("Erreur:", error);
@@ -126,19 +148,17 @@ try {
     </div>
 
     <!-- ------- Forme 2 ------- -->
-    <div
-      class="mt-16 mb-16 bg-white p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
-    >
-      <!-- Titre -->
-      <h2 class="text-3xl font-bold text-center mb-2">Lorem Ipsum</h2>
-      <div class="flex justify-center mb-6">
-        <div class="bg-beige h-1 w-32 rounded"></div>
+    {textBlocks.map((block) => (
+      <div class="mt-16 mb-16 bg-white p-10 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <!-- Titre -->
+        <h2 class="text-3xl font-bold text-center mb-2">{block.title}</h2>
+        <div class="flex justify-center mb-6">
+          <div class="bg-beige h-1 w-32 rounded"></div>
+        </div>
+        <!-- Texte -->
+        <p class="text-gray-700 text-center max-w-2xl mx-auto font-light">
+          {block.content}
+        </p>
       </div>
-      <!-- Texte -->
-      <p class="text-gray-700 text-center max-w-2xl mx-auto font-light">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
-      </p>
-    </div>
-  </div>
+    ))}
 </Layout>
