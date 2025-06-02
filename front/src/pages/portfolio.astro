@@ -1,6 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import './src/styles/global.css'
+import Layout from "../layouts/Layout.astro";
+import "./src/styles/global.css";
 
 // Interface pour les données Strapi
 interface StrapiTitle {
@@ -12,8 +12,10 @@ interface StrapiTitle {
 let pageTitle = "Portfolio";
 
 try {
-  const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
-  
+  const response = await fetch(
+    `${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`
+  );
+
   if (response.ok) {
     const { data } = await response.json();
     // Chercher le titre avec type = 3 (Portfolio)
@@ -22,31 +24,38 @@ try {
       pageTitle = portfolioTitle.alt;
     }
   } else {
-    console.error('Erreur lors de la récupération du titre');
+    console.error("Erreur lors de la récupération du titre");
   }
 } catch (error) {
-  console.error('Erreur:', error);
+  console.error("Erreur:", error);
 }
 
 // Tu pourras remplacer ça par un fetch à Strapi
 const projets = [
-  { id: 1, title: 'Site web pour un restaurant' },
-  { id: 2, title: 'Identité visuelle pour une artiste' },
+  { id: 1, title: "Site web pour un restaurant" },
+  { id: 2, title: "Identité visuelle pour une artiste" },
 ];
 ---
 
 <Layout>
-  <div class="max-w-6xl mx-auto px-4 py-24">
-    <h1 class="text-3xl font-bold text-center mb-2">{pageTitle}</h1>
-    <div class="flex justify-center mb-6">
-      <div class="bg-beige h-1 w-32 rounded"></div>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {projets.map(p => (
-        <div class="border p-4 shadow hover:shadow-lg transition">
-          <h2 class="text-lg font-bold">{p.title}</h2>
+  <div class="flex-grow flex flex-col">
+    <div class="max-w-6xl w-full mx-auto px-4 py-24">
+      <!-- Contenu existant -->
+      <div class="max-w-6xl mx-auto px-4">
+        <h1 class="text-3xl font-bold text-center mb-2">{pageTitle}</h1>
+        <div class="flex justify-center mb-6">
+          <div class="bg-beige h-1 w-32 rounded"></div>
         </div>
-      ))}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {
+            projets.map((p) => (
+              <div class="border p-4 shadow hover:shadow-lg transition">
+                <h2 class="text-lg font-bold">{p.title}</h2>
+              </div>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </div>
 </Layout>

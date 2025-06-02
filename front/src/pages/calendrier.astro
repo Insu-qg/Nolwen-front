@@ -1,6 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Calendar from '../components/Calendar.jsx';
+import Layout from "../layouts/Layout.astro";
+import Calendar from "../components/Calendar.jsx";
 
 // Interface pour les données Strapi
 interface StrapiTitle {
@@ -12,8 +12,10 @@ interface StrapiTitle {
 let pageTitle = "Calendrier des événements";
 
 try {
-  const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
-  
+  const response = await fetch(
+    `${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`
+  );
+
   if (response.ok) {
     const { data } = await response.json();
     // Chercher le titre avec type = 5 (Calendrier)
@@ -22,19 +24,23 @@ try {
       pageTitle = calendarTitle.alt;
     }
   } else {
-    console.error('Erreur lors de la récupération du titre');
+    console.error("Erreur lors de la récupération du titre");
   }
 } catch (error) {
-  console.error('Erreur:', error);
+  console.error("Erreur:", error);
 }
 ---
 
 <Layout>
-  <div class="max-w-6xl mx-auto px-4 py-24">
-    <h1 class="text-4xl font-bold text-center mb-2">{pageTitle}</h1>
-    <div class="flex justify-center mb-6">
-      <div class="bg-beige h-1 w-32 rounded"></div>
+  <div class="flex-grow flex flex-col">
+    <div class="max-w-6xl w-full mx-auto px-4 py-24">
+      <div class="max-w-6xl mx-auto px-4">
+        <h1 class="text-4xl font-bold text-center mb-2">{pageTitle}</h1>
+        <div class="flex justify-center mb-6">
+          <div class="bg-beige h-1 w-32 rounded"></div>
+        </div>
+        <Calendar client:only="react" />
+      </div>
     </div>
-    <Calendar client:only="react" />
   </div>
 </Layout>

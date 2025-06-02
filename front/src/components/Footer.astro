@@ -1,0 +1,73 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-darkgray text-white py-8 mt-auto">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Contact -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">Contact</h3>
+        <ul class="space-y-2">
+          <li>
+            <a href="mailto:contact@example.com" class="hover:text-beige transition-colors">
+              contact@example.com
+            </a>
+          </li>
+          <li>
+            <a href="tel:+33123456789" class="hover:text-beige transition-colors">
+              +33 1 23 45 67 89
+            </a>
+          </li>
+          <li>123 Rue Example, 75000 Paris</li>
+        </ul>
+      </div>
+
+      <!-- Navigation -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">Navigation</h3>
+        <ul class="space-y-2">
+          <li>
+            <a href="/" class="hover:text-beige transition-colors">Accueil</a>
+          </li>
+          <li>
+            <a href="/formations" class="hover:text-beige transition-colors">Formations</a>
+          </li>
+          <li>
+            <a href="/portfolio" class="hover:text-beige transition-colors">Portfolio</a>
+          </li>
+          <li>
+            <a href="/contacts" class="hover:text-beige transition-colors">Contact</a>
+          </li>
+          <li>
+            <a href="/calendrier" class="hover:text-beige transition-colors">Calendrier</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Réseaux sociaux -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">Suivez-nous</h3>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-beige transition-colors">
+            <span class="sr-only">Facebook</span>
+            <i class="fab fa-facebook fa-2x"></i>
+          </a>
+          <a href="#" class="hover:text-beige transition-colors">
+            <span class="sr-only">Twitter</span>
+            <i class="fab fa-twitter fa-2x"></i>
+          </a>
+          <a href="#" class="hover:text-beige transition-colors">
+            <span class="sr-only">LinkedIn</span>
+            <i class="fab fa-linkedin fa-2x"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+      <p>&copy; {currentYear} Votre Entreprise. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>
