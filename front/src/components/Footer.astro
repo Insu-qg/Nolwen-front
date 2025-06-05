@@ -44,6 +44,11 @@ interface StrapiTitle {
   type: number;
 }
 
+interface FooterTitle {
+  title: string;
+  titleId: number;
+}
+
 interface MenuItem {
   name: string;
   href: string;
@@ -56,10 +61,11 @@ interface SocialMedia {
   link: string;
 }
 
-interface FooterTitle {
-  title: string;
-  titleId: number;
-}
+// Fonction pour obtenir le titre de la section
+const getFooterTitle = (titleId: number) => {
+  const footerTitle = footerTitlesData?.find((title: FooterTitle) => title.titleId === titleId);
+  return footerTitle?.title;
+};
 
 // Mapping des URLs pour chaque type
 const urlMapping = [
@@ -75,12 +81,6 @@ const navItems = navData?.map((item: StrapiTitle) => ({
   href: urlMapping[item.type - 1],
   order: item.type
 })).sort((a: MenuItem, b: MenuItem) => a.order - b.order);
-
-// Fonction pour obtenir le titre de la section
-const getFooterTitle = (titleId: number) => {
-  const footerTitle = footerTitlesData?.find((title: FooterTitle) => title.titleId === titleId);
-  return footerTitle?.title;
-};
 ---
 
 <footer class="bg-darkgray text-white py-8 mt-auto">
@@ -157,6 +157,11 @@ const getFooterTitle = (titleId: number) => {
           ))}
         </div>
       </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+      <p>&copy; {currentYear} {copyright}</p>
     </div>
   </div>
 </footer>
