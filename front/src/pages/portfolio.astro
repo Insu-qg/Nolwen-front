@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { marked } from 'marked'; // Pour parser le markdown
 import "./src/styles/global.css";
 
 // Interface pour les données Strapi
@@ -8,54 +9,80 @@ interface StrapiTitle {
   type: number;
 }
 
-// Valeur par défaut pour le titre de la page
+interface Portfolio {
+  id: number;
+  attributes: {
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
 let pageTitle = "Portfolio";
+let portfolioContent = "";
 
 try {
-  const response = await fetch(
-    `${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`
-  );
-
-  if (response.ok) {
-    const { data } = await response.json();
-    // Chercher le titre avec type = 3 (Portfolio)
+  // Récupération du titre
+  const titleResponse = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
+  if (titleResponse.ok) {
+    const { data } = await titleResponse.json();
     const portfolioTitle = data?.find((item: StrapiTitle) => item.type === 3);
     if (portfolioTitle) {
       pageTitle = portfolioTitle.alt;
     }
-  } else {
-    console.error("Erreur lors de la récupération du titre");
+  }
+
+  // Récupération du portfolio
+  const portfolioResponse = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/portfolios`);
+  if (portfolioResponse.ok) {
+    const { data } = await portfolioResponse.json();
+    if (data && data.length > 0) {
+      const firstPortfolio = data[0];
+      portfolioContent = await marked(firstPortfolio.content); // Conversion du markdown en HTML
+    }
   }
 } catch (error) {
   console.error("Erreur:", error);
 }
-
-// Tu pourras remplacer ça par un fetch à Strapi
-const projets = [
-  { id: 1, title: "Site web pour un restaurant" },
-  { id: 2, title: "Identité visuelle pour une artiste" },
-];
 ---
 
 <Layout>
   <div class="flex-grow flex flex-col">
-    <div class="max-w-6xl w-full mx-auto px-4 py-24">
-      <!-- Contenu existant -->
-      <div class="max-w-6xl mx-auto px-4">
-        <h1 class="text-3xl font-bold text-center mb-2">{pageTitle}</h1>
-        <div class="flex justify-center mb-6">
-          <div class="bg-beige h-1 w-32 rounded"></div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {
-            projets.map((p) => (
-              <div class="border p-4 shadow hover:shadow-lg transition">
-                <h2 class="text-lg font-bold">{p.title}</h2>
-              </div>
-            ))
-          }
-        </div>
+    <div class="max-w-6xl w-full mx-auto px-4 py-12">
+      <h1 class="text-4xl font-bold text-center mb-2">{pageTitle}</h1>
+      <div class="flex justify-center mb-12">
+        <div class="bg-beige h-1 w-32 rounded"></div>
+      </div>
+
+      <div class="prose prose-lg max-w-none">
+        <article set:html={portfolioContent} class="portfolio-content" />
       </div>
     </div>
   </div>
 </Layout>
+
+<style>
+  .portfolio-content :global(h2) {
+    @apply text-2xl font-bold mt-8 mb-4;
+  }
+
+  .portfolio-content :global(p) {
+    @apply mb-4 leading-relaxed;
+  }
+
+  .portfolio-content :global(ul) {
+    @apply list-disc pl-6 mb-4;
+  }
+
+  .portfolio-content :global(a) {
+    @apply text-blue-600 hover:text-blue-800 underline;
+  }
+
+  .portfolio-content :global(img) {
+    @apply rounded-lg shadow-lg my-6 max-w-full h-auto;
+  }
+
+  .portfolio-content :global(blockquote) {
+    @apply border-l-4 border-gray-300 pl-4 italic my-4;
+  }
+</style>
