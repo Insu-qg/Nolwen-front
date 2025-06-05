@@ -1,0 +1,61 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { marked } from 'marked';
+
+// Récupération des mentions légales depuis Strapi
+const response = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/mention-legals`);
+const { data: mentionLegals } = await response.json();
+
+// Récupération du titre et du contenu
+const pageTitle = mentionLegals?.[0]?.title || "Mentions Légales";
+const content = mentionLegals?.[0]?.content || "";
+
+// Conversion du Markdown en HTML
+const htmlContent = marked(content);
+---
+
+<Layout>
+  <div class="flex-grow flex flex-col">
+    <div class="max-w-6xl w-full mx-auto px-4 py-24">
+      <h1 class="text-4xl font-bold text-center mb-2">{pageTitle}</h1>
+      <div class="flex justify-center mb-6">
+        <div class="bg-beige h-1 w-32 rounded"></div>
+      </div>
+
+      <div class="bg-white p-8 rounded-lg shadow-sm prose prose-lg max-w-none">
+        <div set:html={htmlContent} />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style is:global>
+  /* Styles pour le contenu Markdown */
+  .prose h2 {
+    @apply text-2xl font-bold mb-4 mt-8;
+  }
+  
+  .prose p {
+    @apply mb-4 text-gray-700;
+  }
+  
+  .prose ul {
+    @apply list-disc list-inside mb-4;
+  }
+  
+  .prose ol {
+    @apply list-decimal list-inside mb-4;
+  }
+  
+  .prose a {
+    @apply text-primary hover:text-secondary underline;
+  }
+  
+  .prose strong {
+    @apply font-bold;
+  }
+  
+  .prose em {
+    @apply italic;
+  }
+</style>

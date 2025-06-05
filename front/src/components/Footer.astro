@@ -1,25 +1,71 @@
 ---
 const currentYear = new Date().getFullYear();
+
+// Récupération des données de navigation depuis Strapi
+const responseNav = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/titles`);
+const { data: navData } = await responseNav.json();
+
+// Récupération de l'email depuis Strapi
+const responseEmail = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/emails`);
+const { data: emailData } = await responseEmail.json();
+const firstEmail = emailData?.[0]?.email || 'contact@example.com';
+
+// Récupération du téléphone depuis Strapi
+const responsePhone = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/phones`);
+const { data: phoneData } = await responsePhone.json();
+const firstPhone = phoneData?.[0]?.phone || '+33 1 23 45 67 89';
+
+// Récupération de l'adresse depuis Strapi
+const responseAddress = await fetch(`${import.meta.env.PUBLIC_STRAPI_URL}/api/addresses`);
+const { data: addressData } = await responseAddress.json();
+const firstAddress = addressData?.[0]?.address || '123 Rue Example, 75sss000 Paris';
+
+// Interface pour les données Strapi
+interface StrapiTitle {
+  title: string;
+  type: number;
+}
+
+interface MenuItem {
+  name: string;
+  href: string;
+  order: number;
+}
+
+// Mapping des URLs pour chaque type
+const urlMapping = [
+  "/",
+  "/formations",
+  "/portfolio",
+  "/contacts",
+  "/calendrier",
+];
+
+const navItems = navData?.map((item: StrapiTitle) => ({
+  name: item.title,
+  href: urlMapping[item.type - 1],
+  order: item.type
+})).sort((a: MenuItem, b: MenuItem) => a.order - b.order);
 ---
 
 <footer class="bg-darkgray text-white py-8 mt-auto">
   <div class="max-w-6xl mx-auto px-4">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <!-- Contact -->
       <div>
         <h3 class="text-xl font-bold mb-4">Contact</h3>
         <ul class="space-y-2">
           <li>
-            <a href="mailto:contact@example.com" class="hover:text-beige transition-colors">
-              contact@example.com
+            <a href={`mailto:${firstEmail}`} class="hover:text-beige transition-colors">
+              {firstEmail}
             </a>
           </li>
           <li>
-            <a href="tel:+33123456789" class="hover:text-beige transition-colors">
-              +33 1 23 45 67 89
+            <a href={`tel:${firstPhone.replace(/\s/g, '')}`} class="hover:text-beige transition-colors">
+              {firstPhone}
             </a>
           </li>
-          <li>123 Rue Example, 75000 Paris</li>
+          <li>{firstAddress}</li>
         </ul>
       </div>
 
@@ -27,20 +73,34 @@ const currentYear = new Date().getFullYear();
       <div>
         <h3 class="text-xl font-bold mb-4">Navigation</h3>
         <ul class="space-y-2">
+          {navItems?.map((item: MenuItem) => (
+            <li>
+              <a href={item.href} class="hover:text-beige transition-colors">
+                {item.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Mentions Légales -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">Informations</h3>
+        <ul class="space-y-2">
           <li>
-            <a href="/" class="hover:text-beige transition-colors">Accueil</a>
+            <a href="/mentions-legales" class="hover:text-beige transition-colors">
+              Mentions légales
+            </a>
           </li>
           <li>
-            <a href="/formations" class="hover:text-beige transition-colors">Formations</a>
+            <a href="#" class="hover:text-beige transition-colors">
+              Politique de confidentialité
+            </a>
           </li>
           <li>
-            <a href="/portfolio" class="hover:text-beige transition-colors">Portfolio</a>
-          </li>
-          <li>
-            <a href="/contacts" class="hover:text-beige transition-colors">Contact</a>
-          </li>
-          <li>
-            <a href="/calendrier" class="hover:text-beige transition-colors">Calendrier</a>
+            <a href="#" class="hover:text-beige transition-colors">
+              CGU
+            </a>
           </li>
         </ul>
       </div>
